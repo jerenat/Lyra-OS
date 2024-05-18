@@ -1,0 +1,13 @@
+Fuentes:
+
+como armar ISO Bootable con el menu GRUB:
+https://www.gnu.org/software/grub/manual/grub/html_node/Invoking-grub_002dmkrescue.html#Invoking-grub_002dmkrescue
+
+Sources os:
+https://sourceforge.net/projects/luxur/
+https://sourceforge.net/projects/nuos/
+https://visopsys.org/
+https://github.com/torvalds/linux
+https://github.com/kalamangga-net/linux-1.0
+
+
