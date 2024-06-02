@@ -1,4 +1,3 @@
-
 /*definimos las funciones de entrada y salida por lo puertos*/
 
 

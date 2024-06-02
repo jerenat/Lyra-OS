@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <fat12.h>
-
+#include "ia32.c"
 
 void help(){
 	printf(" \n");
@@ -13,6 +13,11 @@ void help(){
 	printf(" \n");
 }
 
+
+
+void shell_cls(){
+	cls();
+}
 
 
 void shell_ls(){ //lista ficheros
@@ -46,7 +51,7 @@ void shell_vi(char *path){ //muestra el contenido de un archivo
 int rec=0;
 static char buff[70000];
 
-file_open(path,buff);
+	file_open(path,buff);
 
 	while(buff[rec]!='\0'){
 		putchar(buff[rec]);
@@ -119,6 +124,24 @@ for(;;){
 		if(argc!=0)shell_vi(argv);
 		else printf("No hay Argumentos\n");
 	}
+
+	if(strcmp(cmd, "reboot")==0){
+		printf("Rebooting....\n\n");
+		reboot();
+	}
+
+	if(strcmp(cmd, "cls") == 0){
+		shell_cls();
+	}
+
+
+	if(strcmp(cmd, "echo") == 0){
+		if(argc!=0){
+			printf("\n%s", argv);
+		}
+	}
+
+
 
 
 } //fin del for()

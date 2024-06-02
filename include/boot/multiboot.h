@@ -1,3 +1,5 @@
+/*extructuras multiboot para poder iniciarlo con GRUB*/
+
 #ifndef _MULTIBOOT_H_
 #define _MULTIBOOT_H_
 

@@ -1,3 +1,10 @@
 {
-  "C_Cpp.errorSquiggles": "disabled"
+  "C_Cpp.errorSquiggles": "disabled",
+  "files.associations": {
+    "*.ejs": "html",
+    "stdio.h": "c",
+    "fat12.h": "c",
+    "types.h": "c",
+    "time.h": "c"
+  }
 }

@@ -1,26 +1,13 @@
-
-// linea
-int line = 1;
-
-/*-- Similar a PRINTF, pero se usa para entornos del kernel del sistema --*/
-void kprintf(char *text, int color)
+int kprintf(int linia,int columna,char *text,char *color)
 {
-   char *video = (char *)(0xB8000 + (line * 80 * 2));
+ char *video=(char*)(0xB8000+((linia*80+columna)*2)); /*direccion de la video segun la linea y la columna*/ 
+                                            
 
-ret:
-   while (*text != 0)
-   {
+ while(*text!=0) //mientras aiga texto                            
+{
+   *video++ = *text++; //enviamos el texto                      
+   *video++ = *color;  //con el color q elegimos                      
 
-      if (*text == '\n')
-      {
-         line++;
-         char *video = (char *)(0xB8000 + (line * 80 * 2));
-         *text++;
-         goto ret;
-      }
-
-      *video++ = *text++;
-      *video++ = 0x0 + color;
-   }
+}
    return;
 }

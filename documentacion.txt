@@ -1,0 +1,33 @@
+Fuentes:
+
+como armar ISO Bootable con el menu GRUB:
+https://www.gnu.org/software/grub/manual/grub/html_node/Invoking-grub_002dmkrescue.html#Invoking-grub_002dmkrescue
+
+Sources os:
+https://sourceforge.net/projects/luxur/
+https://sourceforge.net/projects/nuos/
+https://visopsys.org/
+https://github.com/torvalds/linux
+https://github.com/kalamangga-net/linux-1.0
+
+
+Llamadas al sistema (syscall.c)
+cls -->             0
+puts -->            1
+gets -->            2
+file_open -->       3
+sleep -->           4
+shell -->           5
+putchar -->         6
+kprintf -->         7
+exec -->            8
+cd -->              9
+get_file_size-->    10
+ls -->              11
+
+
+
+%d para enteros.
+%f para números de punto flotante.
+%s para cadenas.
+%p para punteros.
