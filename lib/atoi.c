@@ -1,24 +1,29 @@
-int atoi(char* palabra)
+int atoi(char *palabra)
 {
+	int numero = 0;
+	int i;
+	int longitud = strlen(palabra);
 
-int numero = -1,i;
-int y=0;
-
-	for (i = 0; i <= strlen(palabra); i++){
-		if(palabra[i] - '0' > 0) {
-			numero += 1;
+	// Determinar la longitud de la secuencia de dígitos válidos
+	for (i = 0; i < longitud; i++)
+	{
+		if (palabra[i] >= '0' && palabra[i] <= '9')
+		{
+			numero++;
 		}
-		else{
+		else
+		{
 			break;
 		}
 	}
 
-	for (i = 0; i <= numero;i++){
+	int y = 0;
+	// Convertir la secuencia de dígitos en un número entero
+	for (i = 0; i < numero; i++)
+	{
 		y *= 10;
 		y += palabra[i] - '0';
 	}
 
-return y;
+	return y;
 }
-
-

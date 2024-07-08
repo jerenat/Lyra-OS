@@ -80,7 +80,20 @@ void rtc_get_time(rtc_time_t *time)
 }
 
 
+// Función para esperar durante un número de segundos utilizando RTC
+void sleep_seconds(uint32_t seconds)
+{
+    rtc_time_t start_time, current_time;
+    uint32_t start_seconds, current_seconds;
+    
+    // Obtener el tiempo inicial del RTC
+    rtc_get_time(&start_time);
+    start_seconds = start_time.second + start_time.minute * 60 + start_time.hour * 3600;
 
-
-
-
+    // Esperar hasta que pase el número de segundos especificado
+    do {
+        // Obtener el tiempo actual del RTC
+        rtc_get_time(&current_time);
+        current_seconds = current_time.second + current_time.minute * 60 + current_time.hour * 3600;
+    } while (current_seconds - start_seconds < seconds);
+}

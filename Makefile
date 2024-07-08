@@ -1,98 +1,43 @@
-# variables de comando y banderas
+# Variables de comando y banderas
 CC = gcc 
 AS = as
 LD = ld
 CFLAGS  = -fno-stack-protector 
 LDFLAGS = -T link.ld
 
-# variables de ruta
+# Variables de ruta
 BT = boot
 KRN = kernel
 LB = lib
 NAME = oskrnl
 
-# archivos del $(KRN)
-files = $(BT)/boot.o $(KRN)/descriptor_tables.o $(KRN)/dma.o $(KRN)/exec.o $(KRN)/executes.o $(KRN)/fat12.o $(KRN)/floppy.o $(KRN)/gdt.o $(KRN)/interrupt.o $(KRN)/isr.o $(KRN)/kb.o $(KRN)/kernel.o $(KRN)/kheap.o $(KRN)/paging.o $(KRN)/process.o $(KRN)/rand.o $(KRN)/rtc.o $(KRN)/syscall.o $(KRN)/shell.o $(KRN)/time.o $(KRN)/timer.o $(LB)/atoi.o $(LB)/cls.o $(LB)/kprintf.o $(LB)/printf.o $(LB)/sleep.o $(LB)/strcat.o $(LB)/strcmp.o $(LB)/strcpy.o $(LB)/string.o $(LB)/strlen.o
+# Archivos del $(KRN)
+# Lista de archivos en $(KRN) que necesitan compilación
+krn_sources := descriptor_tables dma exec executes fat12 floppy gdt interrupt isr kb kernel kheap paging process rand rtc syscall shell time timer
 
-# nombre del kernel
-$(KRN) = $(NAME)
+# Lista de archivos en $(LB) que necesitan compilación
+lb_sources := atoi cls isdigit printf sleep strcat strcmp strcpy string strlen strrchr strstr strncmp strchr strtok strcspn strncpy sqrt floor cpuid fgets
 
+# Directorios a compilar
+SUBDIRS := $(BT) $(KRN) $(LB)
 
-.PHONY: all
-all: $(files) $($(KRN))
+# Regla para compilar todos los subdirectorios
+.PHONY: all $(SUBDIRS)
+all: $(SUBDIRS) $(NAME)
 
-# BOOT/
-boot/boot.o:
-	$(MAKE) --directory=boot
+# Regla para cada subdirectorio
+$(SUBDIRS):
+	$(MAKE) --directory=$@
 
+# Objetos del kernel
+krn_objs := $(foreach obj,$(krn_sources),$(KRN)/$(obj).o)
 
-# KERNEL/
-$(KRN)/descriptor_tables.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/dma.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/exec.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/executes.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/fat12.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/floppy.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/gdt.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/interrupt.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/isr.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/kb.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/kernel.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/kheap.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/paging.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/process.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/rand.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/rtc.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/syscall.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/shell.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/time.o:
-	$(MAKE) --directory=$(KRN)
-$(KRN)/timer.o:
-	$(MAKE) --directory=$(KRN)
+# Objetos de la librería
+lb_objs := $(foreach obj,$(lb_sources),$(LB)/$(obj).o)
 
+# Archivos a linkear
+files := $(BT)/boot.o $(krn_objs) $(lb_objs)
 
-# /LIB
-$(LB)/atoi.o:
-	$(MAKE) --directory=$(LB)
-$(LB)/cls.o:
-	$(MAKE) --directory=$(LB)
-$(LB)/kprintf.o:
-	$(MAKE) --directory=$(LB)
-$(LB)/printf.o:
-	$(MAKE) --directory=$(LB)
-$(LB)/sleep.o:
-	$(MAKE) --directory=$(LB)
-$(LB)/strcat.o:
-	$(MAKE) --directory=$(LB)
-$(LB)/strcmp.o:
-	$(MAKE) --directory=$(LB)
-$(LB)/strcpy.o:
-	$(MAKE) --directory=$(LB)
-$(LB)/string.o:
-	$(MAKE) --directory=$(LB)
-$(LB)/strlen.o:
-	$(MAKE) --directory=$(LB)
-
-
-# kernel compiled
-$(NAME):
-	$(LD) $(LDFLAGS) -o $(NAME) $(files)	
-
+# Compilación final del kernel
+$(NAME): $(files)
+	$(LD) $(LDFLAGS) -o $@ $^

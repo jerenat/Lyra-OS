@@ -10,6 +10,7 @@ void ls();
 int file_open(char *stringa, unsigned char *buffer);
 int get_file_size(char *file_name);
 int cd(const char *new_path);
+int fwrite(const char *file_name, const void *data, int size);
 
 
 // Dimencion de la fat 9 sectores de 512 bytes //
@@ -116,7 +117,7 @@ extern unsigned char _ctype[];
 #define isalnum(c)	((__ismask(c)&(_U|_L|_D)) != 0)
 #define isalpha(c)	((__ismask(c)&(_U|_L)) != 0)
 #define iscntrl(c)	((__ismask(c)&(_C)) != 0)
-#define isdigit(c)	((__ismask(c)&(_D)) != 0)
+#define _isdigit(c)	((__ismask(c)&(_D)) != 0)
 #define isgraph(c)	((__ismask(c)&(_P|_U|_L|_D)) != 0)
 #define islower(c)	((__ismask(c)&(_L)) != 0)
 #define isprint(c)	((__ismask(c)&(_P|_U|_L|_D|_SP)) != 0)

@@ -18,23 +18,32 @@ unsigned int initial_esp;
 // -- inicia los complementos del Kernel
 void start_complements(){
 
+    cls(); // -- limpiar pantalla
+    printf("\nIniciando kernel\n\n");
+
     iniciar_descriptor_table();
-    printf("Starting descriptor table\n\n");
+    printf("Iniciando tabla de descriptores\n\n");
+
+    // espera x segundos
+    sleep_seconds(2);
 
     init_keyboard();
-    printf("Starting keyboard\n\n");
+    printf("Iniciando teclado\n\n");
+    sleep_seconds(2);
 
     init_timer(100);
-    printf("Starting timer frecuency in 100ms\n\n");
+    printf("Iniciando tiempo de reloj\n\n");
+    sleep_seconds(2);
 
     sti();
-    printf("Starting interruptions\n\n");
+    printf("Iniciando interrupciones\n\n");
+    sleep_seconds(2);
 
     dma_alloc_init();
-    printf("Starting dma controller\n\n");
+    printf("Iniciando controlador DMA\n\n");
 
     init_floppy();
-    printf("Starting floppy driver\n\n");
+    printf("Iniciando Driver FAT12\n\n");
     
 
     if(mount_fat12() == 1){
@@ -44,7 +53,8 @@ void start_complements(){
     }
 
     initialise_syscalls();
-    printf("Starting system calls\n\n\n");
+    printf("Iniciando system calls\n\n\n");
+    sleep_seconds(2);
 }
 
 // -- Iniciar teclado y carácteres
@@ -69,8 +79,14 @@ void main(unsigned int initial_stack)
 
 
   int size = rand();
-  printf("valor: %u", size);
+  printf("valor: %u\n", size);
 
+  execute_file("logo.txt");
+
+  const char *path = fgets("ejemplo.txt");
+
+  printf("\nTexto obtenido: %s\n", path);
+  
   shell();
 }
 

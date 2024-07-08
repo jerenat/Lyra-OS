@@ -45,6 +45,7 @@ int NextSector(unsigned short *next, unsigned short actual);
 int HowManyCluster(unsigned short start);
 void ReadFile(sector_t *Buf, int start, int c);
 void ReadAttrib(attrib_t *FileAttr, unsigned char attrib);
+void WriteFile(sector_t *data, unsigned short start, int count);
 int ShowFileEntry(FileEntry_t *TempFile);
 
 
@@ -237,6 +238,31 @@ void ReadAttrib(attrib_t *FileAttr, unsigned char attrib)
 	FileAttr->Directory=(attrib & (unsigned char)0x10)&& 0x10;
 	FileAttr->Archived= (attrib & (unsigned char)0x20)&& 0x20;
 	FileAttr->Reserved= attrib>>6;
+}
+
+void WriteFile(sector_t *data, unsigned short start, int count)
+{
+    int i, j;
+    unsigned short a;
+
+    // Escribir en el sector de inicio
+    a = start;
+    for (j = 0; j < 3; j++)
+    {
+        if (fdc_write(31 + a, (unsigned char *)data, 1)) break;
+    }
+
+    // Escribir en los otros sectores, si hay más
+    for (i = 1; i < count; i++)
+    {
+        if (!NextSector(&a, a))
+            break;
+
+        for (j = 0; j < 3; j++)
+        {
+            if (fdc_write(31 + a, (unsigned char *)(data + i), 1)) break;
+        }
+    }
 }
 
 
@@ -448,7 +474,6 @@ void NomeExt(char *stringa, char *nome, char *ext)
 	else for(; a<3; a++) ext[a]=' ';
 }
 
-
 int file_open(char *stringa, unsigned char *buffer)
 {
 	char Nome[8], Ext[3];
@@ -486,6 +511,63 @@ founded:
 
 	if (!found) return(0);
 	return(1);
+}
+
+int fwrite(const char *file_name, const void *data, int size)
+{
+    char name[8], ext[3];
+    SectorDir_t *Buf;
+    int counter, h, i;
+    int found;
+    unsigned short start_cluster;
+    int sectors_needed;
+
+    if (!mount)
+    {
+        printf("\nNo se ha montado el disco!\n");
+        return 0;
+    }
+
+    // Obtener nombre y extensión del archivo
+    NomeExt(file_name, name, ext);
+
+    // Obtener información del directorio actual
+    counter = HowManyCluster(directory);
+    Buf = kmalloc(sizeof(SectorDir_t) * counter);
+    memset(Buf, 0, sizeof(SectorDir_t) * counter);
+    ReadFile((sector_t *)Buf, directory, counter);
+
+    // Buscar el archivo en el directorio actual
+    found = 0;
+    for (h = 0; h < counter; h++)
+    {
+        for (i = 0; i < FAT_SECTOR_SIZE / sizeof(FileEntry_t); i++)
+        {
+            found = ConfrontaNomiExt(Buf[h].Entry[i].Name, name, Buf[h].Entry[i].Extension, ext);
+            if (found)
+            {
+                start_cluster = Buf[h].Entry[i].StartCluster;
+                goto found_file;
+            }
+        }
+    }
+
+found_file:
+    if (!found)
+    {
+        printf("\nArchivo no encontrado.\n");
+        // kfree(Buf);
+        return 0;
+    }
+
+    // Calcular cuántos sectores son necesarios para escribir los datos
+    sectors_needed = (size + FAT_SECTOR_SIZE - 1) / FAT_SECTOR_SIZE;
+
+    // Escribir datos en los sectores del archivo
+    WriteFile((sector_t *)data, start_cluster, sectors_needed);
+
+    // kfree(Buf);
+    return 1;
 }
 
 

@@ -1,9 +1,9 @@
-int strlen(const char *text)
-{
- int i=0;
-          while(*text!=0){ //mientras no sea 0 contamos
-               *text++;
-               i++;
-          }
- return i; //retornamos
+int strlen(const char *text) {
+    const char *inicio = text;  // Guardar el inicio del puntero
+
+    while (*text) {
+        text++;  // Mover el puntero al siguiente carácter
+    }
+
+    return text - inicio;  // Calcular la longitud como la diferencia de punteros
 }

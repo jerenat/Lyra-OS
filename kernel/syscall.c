@@ -14,7 +14,7 @@ static void *syscalls[12] =
     &sleep,//4
     &shell,//5
     &putchar,//6
-    &kprintf,//7
+    //&kprintf,//7
     &exec,//8
     &cd,//9
     &get_file_size,//10

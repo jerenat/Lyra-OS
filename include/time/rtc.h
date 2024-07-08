@@ -20,3 +20,4 @@ typedef struct rtc_time_t
 void cmos_write(uint8_t, uint8_t);
 uint8_t cmos_read(uint8_t);
 void rtc_get_time(rtc_time_t *);
+void sleep_seconds(uint32_t seconds);
