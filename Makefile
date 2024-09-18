@@ -16,7 +16,7 @@ NAME = oskrnl
 krn_sources := descriptor_tables dma exec executes fat12 floppy gdt interrupt isr kb kernel kheap paging process rand rtc syscall shell time timer
 
 # Lista de archivos en $(LB) que necesitan compilación
-lb_sources := atoi cls isdigit printf sleep strcat strcmp strcpy string strlen strrchr strstr strncmp strchr strtok strcspn strncpy sqrt floor cpuid fgets
+lb_sources := atoi cls isdigit printf sleep strcat strcmp strcpy string strlen strrchr strstr strncmp strchr strtok strcspn strncpy sqrt floor cpuid fgets cos sin tan
 
 # Directorios a compilar
 SUBDIRS := $(BT) $(KRN) $(LB)
