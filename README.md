@@ -1,13 +1,41 @@
-Claro, a continuación te presento una versión mejorada y más estructurada de tu descripción. He organizado la información en secciones claras y he refinado el lenguaje para una mayor claridad y profesionalismo.
+# Kernel LYRA OS
+
+![Screenshot](./screen.png)
+
+**Kernel LYRA OS** es un núcleo ligero programado en C que implementa una mínima porción de las bibliotecas estándar de C (`libc`) y se basa en partes de otros proyectos de kernels. Este proyecto tiene como objetivo proporcionar una base sólida para el desarrollo de sistemas operativos personalizados, integrando componentes de proyectos como LuxurOS, NuOS y Visopsys.
 
 ---
 
-## **Fuentes**
+## Tabla de Contenidos
 
-### **Cómo Crear una ISO Bootable con el Menú GRUB**
+1. [Fuentes](#fuentes)
+2. [Información Adicional](#información-adicional)
+   - [Entorno de Compilación](#entorno-de-compilación)
+   - [Registro de Componentes](#registro-de-componentes)
+   - [Estructura del Proyecto](#estructura-del-proyecto)
+   - [Características del Sistema de Archivos](#características-del-sistema-de-archivos)
+   - [Interfaz del Usuario](#interfaz-del-usuario)
+   - [Encabezados y Enlaces](#encabezados-y-enlaces)
+   - [Archivo `ia32.c`](#archivo-ia32c)
+   - [Llamadas al Sistema (`syscall.c`)](#llamadas-al-sistema-syscallc)
+   - [Identificadores para `printf`](#identificadores-para-printf)
+3. [Cronología de Desarrollo](#cronología-de-desarrollo)
+4. [Resumen del Proyecto](#resumen-del-proyecto)
+   - [Características Clave](#características-clave)
+   - [Herramientas Utilizadas](#herramientas-utilizadas)
+   - [Desafíos y Soluciones](#desafíos-y-soluciones)
+5. [Cómo Ejecutarlo](#cómo-ejecutarlo)
+6. [Contribuciones](#contribuciones)
+7. [Licencia](#licencia)
+
+---
+
+## Fuentes
+
+### Cómo Crear una ISO Bootable con el Menú GRUB
 - **Guía:** [Invoking grub-mkrescue](https://www.gnu.org/software/grub/manual/grub/html_node/Invoking-grub_002dmkrescue.html#Invoking-grub_002dmkrescue)
 
-### **Proyectos de Sistemas Operativos**
+### Proyectos de Sistemas Operativos
 - **LuxurOS:** [SourceForge - LuxurOS](https://sourceforge.net/projects/luxur/)
 - **NuOS:** [SourceForge - NuOS](https://sourceforge.net/projects/nuos/)
 - **Visopsys:** [Visopsys Official Site](https://visopsys.org/)
@@ -17,27 +45,27 @@ Claro, a continuación te presento una versión mejorada y más estructurada de 
 
 ---
 
-## **Información Adicional**
+## Información Adicional
 
-### **Entorno de Compilación**
+### Entorno de Compilación
 - **Sistema Operativo:** Ubuntu 16.04 LTS x86 (compatibilidad actual con 32 bits).
-- **Compilador GCC:** Versión 5.4.0 (gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.12)).
-- **Kernel de Linux Utilizado:** 
+- **Compilador GCC:** Versión 5.4.0 (`gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.12)`).
+- **Kernel de Linux Utilizado:**
   ```
   Linux osboxes 4.15.0-142-generic #146~16.04.1-Ubuntu SMP Tue Apr 13 09:26:57 UTC 2021 i686 i686 i686 GNU/Linux
   ```
 
-### **Registro de Componentes**
+### Registro de Componentes
 - **Fuente Principal:** Componentes obtenidos principalmente de **LuxurOS**.
-- **Librerías Extrahidas:**
+- **Librerías Extraídas:**
   - **`ia32.c`:** Extraída de **NuOS**.
   - **Visopsys:** Librerías provenientes de **Visopsys**, un sistema operativo en C con interfaz gráfica.
   - **Tiempo y CMOS:** Librerías de tiempo y CMOS extraídas de **Lux-kernel**.
 - **Inspiración:** Diseño basado en **Linux** y comentarios adicionales.
 
-### **Estructura del Proyecto**
+### Estructura del Proyecto
 - **Makefile:** 
-  - **Función:** Compila y enlaza todos los archivos en un único archivo ejecutable compatible con GRUB.
+  - **Función:** Compila y enlaza todos los archivos en un único ejecutable compatible con GRUB.
   - **Proceso:** Verificación y reescritura del código utilizando ChatGPT.
 - **Organización de Carpetas:**
   - **`boot`:** Contiene el archivo `boot.S` en ensamblador, extraído de otro código.
@@ -45,17 +73,17 @@ Claro, a continuación te presento una versión mejorada y más estructurada de 
   - **`kernel`:** Contiene el núcleo (kernel) del sistema.
   - **`lib`:** Contiene las librerías compilables, reducidas a `lib.o`.
 
-### **Características del Sistema de Archivos**
+### Características del Sistema de Archivos
 - **FAT12:**
   - **Capacidad:** Soporta hasta 16 MB de memoria por clúster, adecuado para sistemas empotrados.
   - **Imagen (IMG):** Capacidad de 1.44 MB (1440 KB).
 
-### **Interfaz del Usuario**
+### Interfaz del Usuario
 - **Shell Básico:**
   - **Funciones:** Incluye ayuda y funciones esenciales para la interacción del usuario.
   - **Integración:** Todas las funciones del sistema están enlazadas dentro de `stdio.h` y las estructuras con tipos enteros se encuentran en `stddef.h`.
 
-### **Encabezados y Enlaces**
+### Encabezados y Enlaces
 - **`include/boot/multiboot.h`:**
   - **Contenido:** Estructuras básicas para arrancar ELF con GRUB, esencial para el arranque de programas escritos en C.
   - **Fuente:** Puede ser extraída de cualquier repositorio compatible.
@@ -70,26 +98,28 @@ Claro, a continuación te presento una versión mejorada y más estructurada de 
       ```
   - **Configuración:** Se añade el entero de 32 bits más la capacidad de memoria del computador.
 
-### **Archivo `ia32.c`**
+### Archivo `ia32.c`
 - **Función Principal:** Contiene diversas funciones, destacando `reboot`, que interactúa con la salida del procesador para reiniciar el sistema.
 
-### **Llamadas al Sistema (`syscall.c`)**
-| Función    | Identificador |
-|------------|----------------|
-| `cls`      | 0              |
-| `puts`     | 1              |
-| `gets`     | 2              |
-| `file_open`| 3              |
-| `sleep`    | 4              |
-| `shell`    | 5              |
-| `putchar`  | 6              |
-| `kprintf`  | 7              |
-| `exec`     | 8              |
-| `cd`       | 9              |
-| `get_file_size`| 10         |
-| `ls`       | 11             |
+### Llamadas al Sistema (`syscall.c`)
 
-### **Identificadores para `printf`**
+| Función        | Identificador |
+|----------------|----------------|
+| `cls`          | 0              |
+| `puts`         | 1              |
+| `gets`         | 2              |
+| `file_open`    | 3              |
+| `sleep`        | 4              |
+| `shell`        | 5              |
+| `putchar`      | 6              |
+| `kprintf`      | 7              |
+| `exec`         | 8              |
+| `cd`           | 9              |
+| `get_file_size`| 10             |
+| `ls`           | 11             |
+
+### Identificadores para `printf`
+
 | Formato | Descripción                        |
 |---------|------------------------------------|
 | `%d`    | Enteros                            |
@@ -101,18 +131,18 @@ Claro, a continuación te presento una versión mejorada y más estructurada de 
 
 ---
 
-## **Cronología de Desarrollo**
+## Cronología de Desarrollo
 
-### **Mayo 2024**
+### Mayo 2024
 - **05/12/24:**
   - Creación de un repositorio privado en GitHub para almacenar los archivos: [GitHub - jerenat/os-test](https://github.com/jerenat/os-test).
 
 - **05/12/24:**
   - Creación del archivo `Makefile` para compilar el kernel junto con todas sus librerías utilizando GCC.
 
-### **Junio 2024**
+### Junio 2024
 - **02/06/24:**
-  - Adición de librerías en C:
+  - **Adición de librerías en C:**
     - **`rtc.c`:** Gestión del reloj en tiempo real (Real-Time Clock), esencial para el temporizador del procesador.
     - **`time.c`:** Manejo del tiempo, incluye UTC/UTF, mide unidades de tiempo en segundos y sirve como semilla para números aleatorios.
     - **`io.h`:** Cabecera que define entradas y salidas del procesador, implementadas con ensamblador en línea (`__asm__ volatile`).
@@ -147,11 +177,12 @@ Claro, a continuación te presento una versión mejorada y más estructurada de 
 
 ---
 
-## **Resumen del Proyecto**
+## Resumen del Proyecto
 
-Este proyecto consiste en el desarrollo de un núcleo (kernel) de sistema operativo personalizado, compatible con la especificación Multiboot para ser cargado por GRUB. Se han integrado diversas librerías y componentes provenientes de proyectos existentes como LuxurOS, NuOS y Visopsys, así como adaptaciones basadas en el kernel de Linux.
+**Kernel LYRA OS** es un núcleo de sistema operativo personalizado diseñado para ser compatible con la especificación Multiboot, permitiendo su carga a través de GRUB. El proyecto integra diversas librerías y componentes de proyectos existentes como LuxurOS, NuOS y Visopsys, además de adaptaciones basadas en el kernel de Linux, ofreciendo una base robusta y modular para el desarrollo de sistemas operativos.
 
-### **Características Clave:**
+### Características Clave
+
 - **Compatibilidad Multiboot:** Permite el arranque a través de GRUB utilizando un encabezado Multiboot correctamente configurado.
 - **Sistema de Archivos FAT12:** Soporte para hasta 16 MB por clúster, adecuado para sistemas empotrados.
 - **Shell Básico:** Incluye comandos esenciales como `ls`, `cd`, `exec`, `vi`, `help`, `reboot`, `cls`, `echo`, `version`, `pwd`, y `arch`.
@@ -159,12 +190,14 @@ Este proyecto consiste en el desarrollo de un núcleo (kernel) de sistema operat
 - **Funciones del Sistema:** Implementación de múltiples llamadas al sistema para manejar operaciones básicas y avanzadas.
 - **Estructura Modular:** Organización clara de carpetas y archivos para facilitar el mantenimiento y la expansión del proyecto.
 
-### **Herramientas Utilizadas:**
+### Herramientas Utilizadas
+
 - **Compilador:** GCC versión 5.4.0.
 - **Sistema Operativo de Desarrollo:** Ubuntu 16.04 LTS x86.
 - **Control de Versiones:** GitHub (repositorio privado).
 
-### **Desafíos y Soluciones:**
+### Desafíos y Soluciones
+
 - **Compatibilidad de 32 Bits:** Adaptación del kernel para funcionar exclusivamente en arquitecturas de 32 bits.
 - **Generación de Números Aleatorios:** Modificación de `printf.c` para soportar nuevos formatos y asegurar la correcta generación de números aleatorios.
 - **Gestión del Tiempo:** Implementación de funciones para manejar el tiempo real y pausas basadas en el reloj del CMOS.
@@ -172,8 +205,61 @@ Este proyecto consiste en el desarrollo de un núcleo (kernel) de sistema operat
 
 ---
 
-## **Conclusión**
+## Cómo Ejecutarlo
 
-Este proyecto representa una iniciativa completa de desarrollo de un sistema operativo básico, combinando conocimientos de ensamblador, C y gestión de sistemas de archivos. La estructura organizada y la integración de diversas fuentes y librerías permiten una base sólida para futuras expansiones y mejoras. El uso de herramientas estándar como GCC y GRUB asegura una compatibilidad y funcionalidad robustas.
+1. **Preparación:**
+   - Asegúrate de tener instalado **Ubuntu 16.04 LTS x86** y el **GCC 5.4.0**.
 
-Si necesitas más detalles sobre alguna sección específica o tienes alguna pregunta adicional, no dudes en consultarme.
+2. **Clonar el Repositorio:**
+   ```bash
+   git clone https://github.com/jerenat/os-test.git
+   cd os-test
+   ```
+
+3. **Compilar el Kernel:**
+   - Ejecuta el siguiente comando para compilar el kernel junto con todas sus librerías:
+     ```bash
+     make
+     ```
+
+4. **Crear la Imagen Bootable:**
+   - Utiliza el script proporcionado para crear una ISO bootable con GRUB:
+     ```bash
+     ./START_IMG.cmd
+     ```
+
+5. **Arrancar el Sistema:**
+   - La imagen `.img` estará disponible en la carpeta `qemu`. Puedes arrancarla usando un emulador como QEMU:
+     ```bash
+     qemu-system-i386 -cdrom path/to/your.img
+     ```
+
+---
+
+## Contribuciones
+
+¡Las contribuciones son bienvenidas! Si deseas contribuir a este proyecto, por favor sigue estos pasos:
+
+1. **Fork del Proyecto**
+2. **Crear una Rama para tu Feature (`git checkout -b feature/nueva-feature`)**
+3. **Commit de tus Cambios (`git commit -m 'Añadir nueva feature')`**
+4. **Push a la Rama (`git push origin feature/nueva-feature`)**
+5. **Abrir un Pull Request**
+
+Por favor, asegúrate de que tu código siga las normas de estilo y que todas las pruebas pasen antes de enviar un Pull Request.
+
+---
+
+## Licencia
+
+Este proyecto está licenciado bajo la [MIT License](LICENSE).
+
+---
+
+## Contacto
+
+Para cualquier consulta o sugerencia, por favor contacta a [tu-email@ejemplo.com](mailto:tu-email@ejemplo.com).
+
+---
+
+**Nota:** Este proyecto está en fase de desarrollo y puede contener errores. Se recomienda utilizarlo únicamente con fines educativos y de prueba.
